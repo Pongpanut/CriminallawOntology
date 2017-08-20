@@ -1,0 +1,11 @@
+
+#wrapper  #page-wrapper{
+    margin: 0 0;
+}
+.header{
+    background-color: grey;
+    color: white;
+    text-align: center;
+    margin: 0px 0px;
+    padding: 10px 0px;
+}

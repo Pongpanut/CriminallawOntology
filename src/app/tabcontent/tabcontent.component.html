@@ -1,0 +1,18 @@
+<div class="col-md-6">  
+      <p class="display-inline">กรุณาเลือก {{instancename}} : </p> 
+      <select  #selectedCategory  [(ngModel)]="defaultValue" class="form-control display-inline" (ngModelChange)="onChange($event)"
+            style="width:40%">
+            <option *ngFor="let actor of actordata" [value]="actor.value">{{actor.value}}</option>
+      </select>
+      <button type="button" class="btn btn-primary display-inline" (click)="myFunc(selectedCategory.value)">Submit</button>
+</div>
+<div class="col-md-6" id="flowchart">
+<p>Flow chart</p>
+<app-activityresult></app-activityresult>
+<div *ngFor="let item of flowchart">
+
+  {{item}}
+</div>
+</div>
+
+

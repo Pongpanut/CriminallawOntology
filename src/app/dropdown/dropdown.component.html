@@ -1,0 +1,8 @@
+<select class="form-control numdropdown" [(ngModel)]="selectedVal" (ngModelChange)="onChange($event)">
+      <option *ngFor="let item of currencyCodes" [value]="item.key">{{item.value}}</option>
+</select>
+<br/>
+<br/>
+<div>
+      <app-usertab [data] = "userCount"></app-usertab>
+</div>
