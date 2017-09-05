@@ -7,9 +7,9 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class UsertabComponent implements OnInit {
   @Input() data;
+  userCount: {id: number}[] = [];
   constructor() { }
 
   ngOnInit() {
   }
-
 }
