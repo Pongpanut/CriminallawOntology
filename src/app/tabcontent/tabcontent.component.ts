@@ -8,6 +8,7 @@ import { RelizedService } from '../service/relized.service';
 import { UsertabComponent } from '../usertab/usertab.component';
 import { YesnoAwarenessService } from '../service/yesnoawareness.service';
 import { YesnoService } from '../service/yesno.service';
+import { OntologyService } from '../service/ontology.service';
 import { YesnoDirectService } from '../service/yesnodirect.service';
 import { YesnoTransferService } from '../service/yesnotransfer.service';
 import { IntoxicationormindService } from '../service/intoxicationormind.service';
@@ -18,6 +19,11 @@ import { YesnoCriminalImpunityService } from '../service/yesnoCriminalImpunity.s
 import { OffenderageService } from '../service/offenderage.service';
 import { IntoxicationService } from '../service/intoxication.service';
 import { YesnoDefenseService } from '../service/yesnodefense.service';
+import { ParameterService } from '../model/parameter';
+import { VicDetailService } from '../service/vicdetail.service';
+import { AddDetailService } from '../service/addDetail.service';
+import {Subscription} from 'rxjs';
+import {NgProgressService} from "ng2-progressbar";
 
 @Component({
   selector: 'app-tabcontent',
@@ -40,6 +46,7 @@ export class TabContentComponent implements OnInit {
   gatherJustificationFirsttime: boolean;
   gatherImpunity: boolean;
   gatherImpunityFirsttime: boolean;
+  busy: Subscription;
 
   constructor(private actorService : ActorService,
     private actionService : ActionService, 
@@ -58,14 +65,21 @@ export class TabContentComponent implements OnInit {
     private intoxicationService: IntoxicationService,
     private intoxicationormindService: IntoxicationormindService,
     private yesnoService: YesnoService,
-    private usertabcomb : UsertabComponent) 
+    private ontologyService: OntologyService,
+    private usertabcomb : UsertabComponent,
+    private vicDetailService : VicDetailService,
+    private addDetailService : AddDetailService,
+    private http: Http,
+    private pService: NgProgressService,
+    private parameterService: ParameterService) 
   { 
 
   }
 
  
   ngOnInit() {
-    this.gatherIntention = false
+    var test ="";
+    this.gatherIntention = false;
     this.ruleFlag = false;
     this.gatherJustification = false;
     this.instancename = 'Actor';
@@ -79,6 +93,27 @@ export class TabContentComponent implements OnInit {
 
   onChange(event) {
     
+  }
+
+  CallOntologyApi(){
+        this.pService.start();
+        var param = "";
+        if(this.parameterService.offender != "" && typeof this.parameterService.offender !== "undefined" )
+            param += "offender="+this.parameterService.offender+"&";
+        if(this.parameterService.victim != "" && typeof this.parameterService.victim !== "undefined" )
+          param += "victim="+this.parameterService.victim+"&";
+        if(this.parameterService.crimeSucceed != "" && typeof this.parameterService.crimeSucceed !== "undefined" )
+          param += "crimesucceed="+this.parameterService.crimeSucceed+"&";
+        if(this.parameterService.victimDetail != "" && typeof this.parameterService.victimDetail !== "undefined" )
+          param += "victimdetail="+this.parameterService.victimDetail+"&";
+        if(this.parameterService.additionalDetail != "" && typeof this.parameterService.additionalDetail !== "undefined" )
+          param += "adddetail="+this.parameterService.additionalDetail+"&";
+
+        this.ontologyService.findResponse(param).subscribe(response => {
+          var res = response;
+          alert("Answer is :"+ res);
+          this.pService.done();
+        });
   }
 
   myFunc(value){
@@ -122,6 +157,16 @@ export class TabContentComponent implements OnInit {
 
     // For Action
     if(this.value == "ผู้สนับสนุนโดยไม่รู้" || this.value == "ผู้กระทำความผิด" || this.value == "ผู้กระทำความผิดแบบกลุ่ม"){
+
+      if(this.value == "ผู้สนับสนุนโดยไม่รู้" ){
+        this.parameterService.innocent = "Innocentagent";
+      }
+      if(this.value == "ผู้กระทำความผิด"){
+        this.parameterService.offender = "Offender";
+      }
+      if(this.value == "ผู้กระทำความผิดแบบกลุ่ม"){
+        this.parameterService.party = "Party" ;
+      }
       this.instancename = "Victim"
       this.dropdownListData = [];
       this.victimService.findAllVictim().subscribe(response => {
@@ -134,6 +179,7 @@ export class TabContentComponent implements OnInit {
 
     // For Victim
     if(this.value == "คน"){
+       this.parameterService.victim = "victim" ;
        this.instancename = "Action"
        this.dropdownListData = [];
        this.actionService.findAllActionCat1().subscribe(response => {
@@ -145,6 +191,7 @@ export class TabContentComponent implements OnInit {
     }
 
      if(this.value == "สิ่งของ"){
+       //TODO
        this.instancename = "Action"
        this.dropdownListData = [];
        this.actionService.findAllActionCat2().subscribe(response => {
@@ -156,6 +203,7 @@ export class TabContentComponent implements OnInit {
     }
 
      if(this.value == "ไม่มีผู้ถูกกระทำ"){
+       //TODO
        this.instancename = "Action"
        this.dropdownListData = [];
        this.actionService.findAllActionCat3().subscribe(response => {
@@ -168,6 +216,7 @@ export class TabContentComponent implements OnInit {
 
     // For Causation
     if(this.value == "ทำลาย"){
+      //TODO
       this.instancename = "Causation"
       this.dropdownListData = [];
       this.causationService.findCausationVic2().subscribe(response => {
@@ -179,6 +228,7 @@ export class TabContentComponent implements OnInit {
   }
 
     if(this.value == "ขโมย"){
+      //TODO
       this.instancename = "Causation"
       this.dropdownListData = [];
       this.causationService.findCausationVic3().subscribe(response => {
@@ -189,8 +239,83 @@ export class TabContentComponent implements OnInit {
     });
    }
 
-    if(this.value == "ฆ่า"
-        || this.value == "ทำร้าย" ){
+   if(this.value == "เสียชีวิต"){
+      this.parameterService.causation = "victimdied" ;
+    }
+
+    if(this.value == "บาดเจ็บ"){
+      this.parameterService.causation = "injured" ;
+    }
+
+    if(this.value == "บาดเจ็บสาหัส"){
+      this.parameterService.causation = "seriously_injured" ;
+    }
+   
+
+    if(this.value == "ฆ่า" || this.value == "ทำร้าย" ){
+      if(this.value == "ฆ่า"){
+        this.parameterService.crimeSucceed = "kill" ;
+      }
+      if(this.value == "ทำร้าย"){
+        this.parameterService.crimeSucceed = "harm" ;
+      }
+      this.instancename = "รายละเอียดเหยื่อเพิ่มเติม"
+      this.dropdownListData = [];
+      this.vicDetailService.findAllVicDetail().subscribe(response => {
+      this.resultList = response;
+      for (let action of this.resultList) {
+        this.dropdownListData.push({id: action.id, value: action.name});
+      }
+    });
+  }
+
+  if(this.value == "ไม่มีรายละเอียดเหยื่อเพิ่มเติม" 
+    || this.value == "เหยื่อถูกรุมกระทำจากผู้กระทำและพวก 3 คนขึ้นไป" 
+    || this.value == "เหยื่ออายุน้อยกว่า 16 ปีบริบูรณ์" ){
+      if(this.value == "ไม่มีรายละเอียดเหยื่อเพิ่มเติม"){
+        this.parameterService.victimDetail = "NoVictimDetail" ;
+      }
+      if(this.value == "เหยื่อถูกรุมกระทำจากผู้กระทำและพวก 3 คนขึ้นไป"){
+        this.parameterService.victimDetail = "group_morethan3" ;
+      }
+
+      if(this.value == "เหยื่ออายุน้อยกว่า 16 ปีบริบูรณ์"){
+        this.parameterService.victimDetail = "lessthan16yr" ;
+      }
+      this.instancename = "รายละเอียดเหตุการณ์เพิ่มเติม"
+      this.dropdownListData = [];
+      this.addDetailService.findAllAddDetail().subscribe(response => {
+      this.resultList = response;
+      for (let addDetail of this.resultList) {
+        this.dropdownListData.push({id: addDetail.id, value: addDetail.name});
+      }
+    });
+  }
+
+  if(this.value == "ไม่มีรายละเอียดเพิ่มเติม" 
+    || this.value == "ฆ่าบุพการี" 
+    || this.value == "ฆ่าผู้ช่วยเหลือเจ้าพนักงานในการที่เจ้าพนักงานนั้นกระทำตามหน้าที่" 
+    || this.value == "ฆ่าผู้อื่นโดยไตร่ตรองไว้ก่อน" 
+    || this.value == "ฆ่าผู้อื่นโดยทรมานหรือโดยกระทำทารุณโหดร้าย" 
+    || this.value == "ฆ่าผู้อื่นเพื่อตระเตรียมการหรือเพื่อความสะดวกในการที่จะกระทำความผิดอย่างอื่น" 
+    || this.value == "ฆ่าผู้อื่นเพื่อจะเอาหรือเอาไว้ซึ่งผลประโยชน์อันเกิดแต่การที่ตนได้กระทำความผิดอื่นเพื่อปกปิดความผิดอื่นของตน" 
+    || this.value == "เหยื่อฆ่าตัวตาย" ){
+      if(this.value == "ไม่มีรายละเอียดเพิ่มเติม"){
+        this.parameterService.additionalDetail = "Noadd" ;
+      }
+      if(this.value == "ฆ่าบุพการี"
+        || this.value == "ฆ่าผู้ช่วยเหลือเจ้าพนักงานในการที่เจ้าพนักงานนั้นกระทำตามหน้าที่" 
+        || this.value == "ฆ่าผู้อื่นโดยไตร่ตรองไว้ก่อน" 
+        || this.value == "ฆ่าผู้อื่นโดยทรมานหรือโดยกระทำทารุณโหดร้าย" 
+        || this.value == "ฆ่าผู้อื่นเพื่อตระเตรียมการหรือเพื่อความสะดวกในการที่จะกระทำความผิดอย่างอื่น" 
+        || this.value == "ฆ่าผู้อื่นเพื่อจะเอาหรือเอาไว้ซึ่งผลประโยชน์อันเกิดแต่การที่ตนได้กระทำความผิดอื่นเพื่อปกปิดความผิดอื่นของตน" ){
+        this.parameterService.additionalDetail = "killParent" ;
+      }
+
+      if(this.value == "เหยื่อฆ่าตัวตาย"){
+        this.parameterService.additionalDetail = "VictimKillThemSelf" ;
+      }
+
       this.instancename = "Causation"
       this.dropdownListData = [];
       this.causationService.findCausationVic1().subscribe(response => {
@@ -199,7 +324,8 @@ export class TabContentComponent implements OnInit {
         this.dropdownListData.push({id: action.id, value: action.name});
       }
     });
-    this.gatherIntention = true
+
+  this.gatherIntention = true
   }
 }
 
@@ -207,6 +333,7 @@ export class TabContentComponent implements OnInit {
       
     if(!this.gatherIntentionFirsttime){
       this.instancename = "ว่าผู้กระทำรับรู้ถึงสิ่งที่กระทำอยู่หรือไม่"
+      this.CallOntologyApi();
       this.dropdownListData = [];
         this.relizedService.findAllRelized().subscribe(response => {
         this.resultList = response;

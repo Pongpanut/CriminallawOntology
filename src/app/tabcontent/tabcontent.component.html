@@ -1,4 +1,5 @@
 <div class="col-md-6">  
+<div [ngBusy]="busy"></div>
       <p class="display-inline">กรุณาเลือก {{instancename}} : </p> 
       <select  #selectedCategory   class="form-control display-inline" (ngModelChange)="onChange($event)"
             style="width:40%">

@@ -14,13 +14,12 @@ mongoose.connection.on("open", function(){
  
 // START Schema design
 
-// action schema
+// actor schema
 var Actor = new Schema({
     id: Number,
     name: String
 }, { collection: 'actor' });
 Actor.set('collection', 'actor');
-
 
 // action schema
 var Action = new Schema({
@@ -169,9 +168,23 @@ var intoxicationSch = new Schema({
 }, { collection: 'intoxication' });
 intoxicationSch.set('collection', 'intoxication');
 
+var AddDetail = new Schema({
+    id: Number,
+    name: String
+}, { collection: 'adddetail' });
+AddDetail.set('collection', 'adddetail');
+
+var VicDetail = new Schema({
+    id: Number,
+    name: String
+}, { collection: 'vicdetail' });
+VicDetail.set('collection', 'vicdetail');
+
 // End Schema design 
 
 // SET model
+var adddetailModel = mongoose.model('adddetail', AddDetail);
+var vicdetailModel = mongoose.model('vicdetail', VicDetail);
 var actorModel = mongoose.model('actor', Actor);
 var actionModel = mongoose.model('action', Action);
 var cannotavoidModel = mongoose.model('cannotavoid', CannotAvoidSch);
@@ -512,6 +525,26 @@ var yesnoUnlawfulRes = function(req, res,next){
     });
 };
 
+var adddetailRes = function(req, res,next){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    adddetailModel.find({}, function(err, calls) { 
+        console.log(err, calls, calls.length);  //prints out: null [] 0
+        if(calls.length > 0){
+            res.send(calls);
+        }
+    });
+};
+
+var vicdetailRes = function(req, res,next){
+    res.setHeader('Access-Control-Allow-Origin','*');
+    vicdetailModel.find({}, function(err, calls) { 
+        console.log(err, calls, calls.length);  //prints out: null [] 0
+        if(calls.length > 0){
+            res.send(calls);
+        }
+    });
+};
+
 // End Create response section
 
 app.disable('etag');
@@ -553,7 +586,8 @@ app.use('/getYesnoReasonData',yesnoReasonRes);
 app.use('/getYesnoSpouseData',yesnoSpouseRes);
 app.use('/getYesno334Data',yesno334Res);
 app.use('/getYesnoUnlawfulData',yesnoUnlawfulRes);
-
+app.use('/getVicDetailData',vicdetailRes);
+app.use('/getAddDetailData',adddetailRes);
 //End API declaration
 
 // PORT Configuration

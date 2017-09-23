@@ -13,6 +13,7 @@ import { TabContentComponent } from './tabcontent/tabcontent.component';
 import { ActivityresultComponent } from './activityresult/activityresult.component';
 import { ActorService } from './service/actor.service';
 import { ActionService } from './service/action.service';
+import { OntologyService } from './service/ontology.service';
 import { CausationService } from './service/causation.service';
 import { CannotavoidService } from './service/cannotavoid.service';
 import { IntoxicationormindService } from './service/intoxicationormind.service';
@@ -24,10 +25,16 @@ import { YesnoAwarenessService } from './service/yesnoawareness.service';
 import { YesnoDirectService } from './service/yesnodirect.service';
 import { YesnoTransferService } from './service/yesnotransfer.service';
 import { YesnoMoralService } from './service/yesnomoral.service';
+import { VicDetailService } from './service/vicdetail.service';
+import { AddDetailService } from './service/addDetail.service';
+import { ParameterService } from './model/parameter';
 import { YesnoDangerService } from './service/yesnodanger.service';
 import { YesnoDefenseService } from './service/yesnodefense.service';
 import { YesnoCriminalImpunityService } from './service/yesnoCriminalImpunity.service';
 import { IntoxicationService } from './service/intoxication.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BusyModule} from 'angular2-busy';
+import { NgProgressModule } from 'ng2-progressbar';
 
 //import { MdTabsModule } from '@angular/material';
 
@@ -47,7 +54,10 @@ import { IntoxicationService } from './service/intoxication.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    BusyModule,
+    NgProgressModule
   ],
   providers: [
     ActorService, 
@@ -66,7 +76,11 @@ import { IntoxicationService } from './service/intoxication.service';
     YesnoDangerService,
     YesnoCriminalImpunityService,
     IntoxicationService,
-    YesnoDefenseService],
+    OntologyService,
+    YesnoDefenseService,
+    VicDetailService,
+    AddDetailService,
+    ParameterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
