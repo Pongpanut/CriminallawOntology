@@ -19,9 +19,12 @@ import { YesnoCriminalImpunityService } from '../service/yesnoCriminalImpunity.s
 import { OffenderageService } from '../service/offenderage.service';
 import { IntoxicationService } from '../service/intoxication.service';
 import { YesnoDefenseService } from '../service/yesnodefense.service';
+import { JustificationApiService } from '../service/justificationapi.service';
+import { CriminalImpunityApiService } from '../service/criminalimpunityapi.service';
 import { ParameterService } from '../model/parameter';
 import { VicDetailService } from '../service/vicdetail.service';
 import { AddDetailService } from '../service/addDetail.service';
+import { IntentionApiService } from '../service/intentionapi.service';
 import {Subscription} from 'rxjs';
 import {NgProgressService} from "ng2-progressbar";
 
@@ -42,11 +45,15 @@ export class TabContentComponent implements OnInit {
   ruleFlag: boolean;
   gatherIntention: boolean;
   gatherIntentionFirsttime: boolean;
+  intentionState: string;
+  justificationState: string;
+  criminalimpunityState: string;
   gatherJustification: boolean;
   gatherJustificationFirsttime: boolean;
   gatherImpunity: boolean;
   gatherImpunityFirsttime: boolean;
   busy: Subscription;
+  queryString:  string;
 
   constructor(private actorService : ActorService,
     private actionService : ActionService, 
@@ -69,6 +76,9 @@ export class TabContentComponent implements OnInit {
     private usertabcomb : UsertabComponent,
     private vicDetailService : VicDetailService,
     private addDetailService : AddDetailService,
+    private intentionApiService : IntentionApiService,
+    private justificationApiService : JustificationApiService,
+    private criminalImpunityApiService : CriminalImpunityApiService,
     private http: Http,
     private pService: NgProgressService,
     private parameterService: ParameterService) 
@@ -78,6 +88,9 @@ export class TabContentComponent implements OnInit {
 
  
   ngOnInit() {
+    this.justificationState = "0"
+    this.intentionState = "0";
+    this.criminalimpunityState = "0"
     var test ="";
     this.gatherIntention = false;
     this.ruleFlag = false;
@@ -108,6 +121,72 @@ export class TabContentComponent implements OnInit {
           param += "victimdetail="+this.parameterService.victimDetail+"&";
         if(this.parameterService.additionalDetail != "" && typeof this.parameterService.additionalDetail !== "undefined" )
           param += "adddetail="+this.parameterService.additionalDetail+"&";
+        if(this.parameterService.causation != "" && typeof this.parameterService.causation !== "undefined" )
+          param += "causation="+this.parameterService.causation+"&";
+
+        // Query for intention
+        if(this.parameterService.hasreaact != "" && typeof this.parameterService.hasreaact !== "undefined" )
+          param += "hasreaact="+this.parameterService.hasreaact+"&";
+        if(this.parameterService.hasReaCau != "" && typeof this.parameterService.hasReaCau !== "undefined" )
+          param += "hasreacau="+this.parameterService.hasReaCau+"&";
+        if(this.parameterService.hasintact != "" && typeof this.parameterService.hasintact !== "undefined" )
+          param += "hasintact="+this.parameterService.hasintact+"&";
+        if(this.parameterService.hasActHeedless != "" && typeof this.parameterService.hasActHeedless !== "undefined" )
+          param += "hasactheedless="+this.parameterService.hasActHeedless+"&";
+        if(this.parameterService.hasActHeedlessEng != "" && typeof this.parameterService.hasActHeedlessEng !== "undefined" )
+          param += "hasactheedlesseng="+this.parameterService.hasActHeedlessEng+"&";
+        if(this.parameterService.hasforeeffect != "" && typeof this.parameterService.hasforeeffect !== "undefined" )
+          param += "hasforeeffect="+this.parameterService.hasforeeffect+"&";
+        if(this.parameterService.hasIntentOther != "" && typeof this.parameterService.hasIntentOther !== "undefined" )
+          param += "hasintentother="+this.parameterService.hasIntentOther+"&";
+
+        // Query for Justification
+        if(this.parameterService.hasAssentDuringCrime != "" && typeof this.parameterService.hasAssentDuringCrime !== "undefined" )
+          param += "hasassentduringcrime="+this.parameterService.hasAssentDuringCrime+"&";
+        if(this.parameterService.hasAssentGoodMoral != "" && typeof this.parameterService.hasAssentGoodMoral !== "undefined" )
+          param += "hasassentgoodmoral="+this.parameterService.hasAssentGoodMoral+"&";
+        if(this.parameterService.hasDanger != "" && typeof this.parameterService.hasDanger !== "undefined" )
+          param += "hasdanger="+this.parameterService.hasDanger+"&";
+        if(this.parameterService.hasDangerImn != "" && typeof this.parameterService.hasDangerImn !== "undefined" )
+          param += "hasdangerimn="+this.parameterService.hasDangerImn+"&";
+        if(this.parameterService.hasDefending != "" && typeof this.parameterService.hasDefending !== "undefined" )
+          param += "hasdefending="+this.parameterService.hasDefending+"&";
+        if(this.parameterService.hasLawfulDef != "" && typeof this.parameterService.hasLawfulDef !== "undefined" )
+          param += "haslawfuldef="+this.parameterService.hasLawfulDef+"&";
+        if(this.parameterService.hasPureAssent != "" && typeof this.parameterService.hasPureAssent !== "undefined" )
+          param += "haspureassent="+this.parameterService.hasPureAssent+"&";
+
+          // Query for CRIMINAL IMPUNITY
+        if(this.parameterService.hasActByOfficerCom != "" && typeof this.parameterService.hasActByOfficerCom !== "undefined" )
+          param += "hasactbyofficercom="+this.parameterService.hasActByOfficerCom+"&";
+        if(this.parameterService.hasAge != "" && typeof this.parameterService.hasAge !== "undefined" )
+          param += "hasage="+this.parameterService.hasAge+"&";
+        if(this.parameterService.hasBeForces != "" && typeof this.parameterService.hasBeForces !== "undefined" )
+          param += "hasbeforces="+this.parameterService.hasBeForces+"&";
+        if(this.parameterService.hasCannotAvoid != "" && typeof this.parameterService.hasCannotAvoid !== "undefined" )
+          param += "hascannotavoid="+this.parameterService.hasCannotAvoid+"&";
+        if(this.parameterService.hasCauseDrunk != "" && typeof this.parameterService.hasCauseDrunk !== "undefined" )
+          param += "hascausedrunk="+this.parameterService.hasCauseDrunk+"&";
+        if(this.parameterService.hasDontKnowIlligal != "" && typeof this.parameterService.hasDontKnowIlligal !== "undefined" )
+          param += "hasdontknowilligal="+this.parameterService.hasDontKnowIlligal+"&";
+        if(this.parameterService.hasDontNeed != "" && typeof this.parameterService.hasDontNeed !== "undefined" )
+          param += "hasdontneed="+this.parameterService.hasDontNeed+"&";
+        if(this.parameterService.hasDrunk != "" && typeof this.parameterService.hasDrunk !== "undefined" )
+          param += "hasdrunk="+this.parameterService.hasDrunk+"&";
+        if(this.parameterService.hasIlligalCommand != "" && typeof this.parameterService.hasIlligalCommand !== "undefined" )
+          param += "hasilligalcommand="+this.parameterService.hasIlligalCommand+"&";
+        if(this.parameterService.hasLimit != "" && typeof this.parameterService.hasLimit !== "undefined" )
+          param += "haslimit="+this.parameterService.hasLimit+"&";
+        if(this.parameterService.hasMentalInfirmly != "" && typeof this.parameterService.hasMentalInfirmly !== "undefined" )
+          param += "hasmentalinfirmly="+this.parameterService.hasMentalInfirmly+"&";
+        if(this.parameterService.hasMind != "" && typeof this.parameterService.hasMind !== "undefined" )
+          param += "hasmind="+this.parameterService.hasMind+"&";
+        if(this.parameterService.hasNeedAction != "" && typeof this.parameterService.hasNeedAction !== "undefined" )
+          param += "hasneedaction="+this.parameterService.hasNeedAction+"&";
+        if(this.parameterService.hasProtecetd != "" && typeof this.parameterService.hasProtecetd !== "undefined" )
+          param += "hasprotecetd="+this.parameterService.hasProtecetd+"&";
+        if(this.parameterService.hasSit != "" && typeof this.parameterService.hasSit !== "undefined" )
+          param += "hassit="+this.parameterService.hasSit+"&";
 
         this.ontologyService.findResponse(param).subscribe(response => {
           var res = response;
@@ -124,12 +203,12 @@ export class TabContentComponent implements OnInit {
     this.flowchart.push(this.instancename +" ของผู้เกี่ยวข้องที่  "+this.userId+" คือ '"+value+"'");
     this.value = value;
 
-    if(this.gatherJustification){
-      this.updateDropdownAndInstanceForJustification();
-    }
-
     if(this.gatherImpunity){
       this.updateDropdownAndInstanceForCriminalImpunity();
+    }
+    
+    if(this.gatherJustification){
+      this.updateDropdownAndInstanceForJustification();
     }
 
     if(this.gatherIntention){
@@ -177,6 +256,7 @@ export class TabContentComponent implements OnInit {
       });
     }
 
+    /////  Victim //////
     // For Victim
     if(this.value == "คน"){
        this.parameterService.victim = "victim" ;
@@ -214,6 +294,7 @@ export class TabContentComponent implements OnInit {
      });
     }
 
+    /////  Action //////
     // For Causation
     if(this.value == "ทำลาย"){
       //TODO
@@ -330,291 +411,488 @@ export class TabContentComponent implements OnInit {
 }
 
   updateDropdownAndInstanceForIntention(){
-      
-    if(!this.gatherIntentionFirsttime){
-      this.instancename = "ว่าผู้กระทำรับรู้ถึงสิ่งที่กระทำอยู่หรือไม่"
-      this.CallOntologyApi();
+
+    if(this.value == "รับรู้สิ่งที่กระทำอยู่"){
+      this.parameterService.hasreaact = "reaact" ;
+    }
+    else if(this.value == "รับรู้ผลของการกระทำที่จะเกิดขึ้น"){
+      this.parameterService.hasReaCau = "reacau"
+    }
+    else if(this.value == "มุ่งหมายที่จะให้ผลเกิดขึ้น"){
+      this.parameterService.hasintact = "intact"
+    }
+    else if(this.value == "การกระทำโดยปราศจากความระมัดระวัง"){
+      this.parameterService.hasActHeedless = "act_heedless_obj"
+    }
+    else if(this.value == "ผู้กระทำอาจใช้ความระมัดระวังเช่นว่านั้นได้ แต่อาจหาใช้เพียงพอไม่"){
+      this.parameterService.hasActHeedlessEng = "act_not_enough_heedless_5"
+    }
+    else if(this.value == "เล็งเห็นได้ว่าผลนั้นจะเกิดขึ้นแน่นอน"){
+      this.parameterService.hasforeeffect = "for1"
+    }
+    else if(this.value == "เจตนาที่จะกระทำต่อบุคคลอื่น"){
+      this.parameterService.hasIntentOther = "intent_other_obj"
+    }
+
+
+    if(this.intentionState == "0"){ 
+      this.instancename = "ผู้กระทำรับรู้สิ่งที่กระทำอยู่หรือไม่"
       this.dropdownListData = [];
-        this.relizedService.findAllRelized().subscribe(response => {
+        this.intentionApiService.getHas_rea_act().subscribe(response => {
         this.resultList = response;
         for (let action of this.resultList) {
           this.dropdownListData.push({id: action.id, value: action.name});
         }
       });  
-      this.gatherIntention = true
-      this.gatherIntentionFirsttime = true
+      this.intentionState = "1"
+      return;
     }
-    
-      if(this.value == "รับรู้ถึงสิ่งที่เกิดขึ้น" ){
-      this.instancename = "ผู้กระทำกระทำโดยเจตนา"
+
+    if(this.intentionState == "1"){ 
+      this.instancename = "ผู้กระทำรับรู้บรู้ผลของการกระทำที่จะเกิดขึ้นหรือไม่"
       this.dropdownListData = [];
-      this.yesnoDirectService.findAllYesnoDirect().subscribe(response => {
-      this.resultList = response;
-          for (let action of this.resultList) {
-            this.dropdownListData.push({id: action.id, value: action.name});
-          }
-        });
-        this.gatherJustification = true;
-        this.gatherIntention = false;
-      }
-      if(this.value == "ผู้กระทำไม่รับรู้ แต่ต้องการกระทำกับผู้อื่น" ){
-        this.instancename = "ผู้กระทำกระทำโดยเจตนาต่อบุคคลอื่น"
-        this.dropdownListData = [];
-        this.yesnoTransferService.findAllYesnoTransfer().subscribe(response => {
+        this.intentionApiService.getHas_rea_cau().subscribe(response => {
         this.resultList = response;
-          for (let action of this.resultList) {
-            this.dropdownListData.push({id: action.id, value: action.name});
-          }
-        });
-        this.gatherJustification = true;
-        this.gatherIntention = false;
-      }
-      if(this.value == "ผู้กระทำไม่รับรู้ถึงสิ่งที่เกิดขึ้นและผลที่จะตามมา" ){
-        this.instancename = "ผู้กระทำกระทำโดยเจตนา"
-        this.dropdownListData = [];
-        this.yesnoAwarenessService.findAllYesnoAwareness().subscribe(response => {
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.intentionState = "2"
+      return;
+    }
+
+    if(this.intentionState == "2"){ 
+      this.instancename = "ผู้กระทำมุ่งหมายที่จะให้ผลเกิดขึ้นด้วยตัวผู้กระทำเองหรือไม่"
+      this.dropdownListData = [];
+        this.intentionApiService.getHas_int_act().subscribe(response => {
         this.resultList = response;
-          for (let action of this.resultList) {
-            this.dropdownListData.push({id: action.id, value: action.name});
-          }
-        });
-        this.gatherJustification = true;
-        this.gatherIntention = false;
-      }
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.intentionState = "3"
+      return;
+    }
+
+    if(this.intentionState == "3"){ 
+      this.instancename = "การกระทำนั้นเป็นการกระทำโดยปราศจากความระมัดระวังหรือไม่"
+      this.dropdownListData = [];
+        this.intentionApiService.getHas_act_heedless().subscribe(response => {
+        this.resultList = response;
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.intentionState = "4"
+      return;
+    }
+
+    if(this.intentionState == "4"){ 
+      this.instancename = "ผู้กระทำอาจใช้ความระมัดระวังเช่นว่านั้นได้ แต่อาจหาใช้เพียงพอ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.intentionApiService.getHas_act_heedless_eng().subscribe(response => {
+        this.resultList = response;
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.intentionState = "5"
+      return;
+    }
+
+
+    if(this.intentionState == "5"){ 
+      this.instancename = "ผู้กระทำเล็งเห็นได้ว่าผลนั้นจะเกิดขึ้นแน่นอนหรือไม่"
+      this.dropdownListData = [];
+        this.intentionApiService.getHas_fore_effectModel().subscribe(response => {
+        this.resultList = response;
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.intentionState = "6"
+      return;
+    }
+
+    if(this.intentionState == "6"){ 
+      this.instancename = "ผู้กระทำเจตนาที่จะกระทำต่อบุคคลอื่นหรือไม่"
+      this.dropdownListData = [];
+        this.intentionApiService.getHas_intent_other().subscribe(response => {
+        this.resultList = response;
+        for (let action of this.resultList) {
+          this.dropdownListData.push({id: action.id, value: action.name});
+        }
+      });  
+      this.gatherJustification = true
+      this.gatherIntention = false
+      return
+    }
   }
 
   updateDropdownAndInstanceForJustification(){
-    if(!this.gatherJustificationFirsttime){
-      this.instancename = "รายละเอียดเพิ่มเติม เพื่อพิจราณาการยกเว้นความผิด"
+    if(this.value == "ความยินยอมอยู่ระหว่างขณะกระทำ"){
+      this.parameterService.hasAssentDuringCrime = "Assent_during_crime_15" ;
+    }
+    else if(this.value == "ความยินยอมนั้นไม่ขัดต่อสำนึกในศีลธรรมอันดี"){
+      this.parameterService.hasAssentGoodMoral = "Assent_with_good_moral_14"
+    }
+    else if(this.value == "มีภยันตราย"){
+      this.parameterService.hasDanger = "Danger_2"
+    }
+    else if(this.value == "ภยันตรายนั้นใกล้จะถึง"){
+      this.parameterService.hasDangerImn = "Danger_to_be_imminent_3"
+    }
+    else if(this.value == "ผู้กระทำจำต้องกระทำเพื่อป้องกันสิทธิ ของตนเองหรือผู้อื่น"){
+      this.parameterService.hasDefending = "Defending_1"
+    }
+    else if(this.value == "การกระทำโดยป้องกันสิทธิ และไม่เกินขอบเขต"){
+      this.parameterService.hasLawfulDef = "Act_is_a_lawful_defense_4"
+    }
+    else if(this.value == "เป็นการยินยอมอันบริสุทธิ์"){
+      this.parameterService.hasPureAssent = "Assent_pure_13"
+    }
+
+
+    if(this.justificationState == "0"){
+      this.instancename = "การยินยอมนั้นเกิดอยู่ระหว่างกระทำความผิดหรือไม่"
       this.dropdownListData = [];
-        this.yesnoMoralService.findAllYesnoMoral().subscribe(response => {
+        this.justificationApiService.gethasAssentDuringCrime().subscribe(response => {
         this.resultList = response;
         for (let moral of this.resultList) {
           this.dropdownListData.push({id: moral.id, value: moral.name});
         }
       });  
-      this.gatherJustificationFirsttime = true
+      this.justificationState = "1"
+      return
     }
-    
-      if(this.value == "ผู้กระทำไม่รู้ผิดชอบขณะกระทำความผิด" ){
-      this.instancename = "รายละเอียดเพิ่มเติม เพื่อพิจราณาการยกเว้นความผิด"
-      this.dropdownListData = [];
-      this.yesnoDangerService.findAllYesnoDanger().subscribe(response => {
-      this.resultList = response;
-          for (let danger of this.resultList) {
-            this.dropdownListData.push({id: danger.id, value: danger.name});
-          }
-        });
-      }
-      if(this.value == "ผู้กระทำขณะภยันอันตรายใกล้จะถึง" ){
-        this.instancename = "รายละเอียดเพิ่มเติม เพื่อพิจราณาการยกเว้นความผิด"
-        this.dropdownListData = [];
-        this.yesnoDefenseService.findAllYesnoDefense().subscribe(response => {
-        this.resultList = response;
-          for (let defense of this.resultList) {
-            this.dropdownListData.push({id: defense.id, value: defense.name});
-          }
-        });
-      }
 
-      if(this.value == "ผู้กระทำขณะไม่มีภยันอันตรายใดๆ"
-      || this.value == "ผู้กระทำมิได้กระทำเพื่อปกป้องตนเองหรือผู้อื่น"){
-        this.gatherImpunity = true
-      }
+    if(this.justificationState == "1"){
+      this.instancename = "ความยินยอมนั้นขัดต่อสำนึกในศีลธรรมอันดีหรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasAssentGoodMoral().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.justificationState = "2"
+      return
+    }
+
+    if(this.justificationState == "2"){
+      this.instancename = "ขณะนั้นมีภยันตรายหรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasDanger().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.justificationState = "3"
+      return
+    }
+
+    if(this.justificationState == "3"){
+      this.instancename = "ภยันตรายนั้นใกล้จะถึงหรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasDangerImn().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.justificationState = "4"
+      return
+    }
+
+    if(this.justificationState == "4"){
+      this.instancename = "ผู้กระทำจำต้องกระทำเพื่อป้องกันสิทธิ ของตนเองหรือผู้อื่น ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasDefending().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.justificationState = "5"
+      return
+    }
+
+    if(this.justificationState == "5"){
+      this.instancename = "การกระทำโดยป้องกันสิทธิ และไม่เกินขอบเขต ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasLawfulDef().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.justificationState = "6"
+      return
+    }
+
+    if(this.justificationState == "6"){
+      this.instancename = "เป็นการยินยอมอันบริสุทธิ์ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.justificationApiService.gethasPureAssent().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.gatherImpunity = true
+      this.gatherJustification = false
+      return
+    }
   }
 
   updateDropdownAndInstanceForCriminalImpunity(){
-    if(!this.gatherImpunityFirsttime){
-      this.instancename = "รายละเอียดเพิ่มเติม เพื่อพิจราณาการยกเว้นความโทษซ อายุของผู้กระทำความผิด"
+
+    if(this.value == "กระทำความผิดตามคำสั่งเจ้าพนักงาน"){
+      this.parameterService.hasActByOfficerCom = "Cri_act_by_officer_com_20" ;
+    }
+    else if(this.value == "ผู้กระทำความผิดอายุน้อยกว่า 15 ปี"){
+      this.parameterService.hasAge = "Cri_age_15"
+    }
+    else if(this.value == "อยู่ในที่บังคับหรือภายใต้อำนาจ"){
+      this.parameterService.hasBeForces = "Cri_be_forces_24"
+    }
+    else if(this.value == "ไม่สามารถหลักเลี่ยงหรือขัดขืนได้"){
+      this.parameterService.hasCannotAvoid = "Cri_cannot_avoid_25"
+    }
+    else if(this.value == "ผู้เสพย์ไม่รู้ว่าสิ่งนั้นจะทำให้มึนเมา หรือ ผู้เสพย์ถูกขึนใจให้เสพย์"){
+      this.parameterService.hasCauseDrunk = "Cri_cause_drunk_19"
+    }
+    else if(this.value == "ผุ้กระทำไม่รู้ว่าคำสั่งนั้นมิชอบด้วยกฎหมาย"){
+      this.parameterService.hasDontKnowIlligal = "Cri_dont_know_illigal_22"
+    }
+    else if(this.value == "ผู้กระทำตั้งใจกระทำโดยความต้องการของตน"){
+      this.parameterService.hasDontNeed = "Cri_dont_need_26"
+    }
+    else if(this.value == "กระทำเพราะความมึนเมา"){
+      this.parameterService.hasDrunk = "Cri_drunk_18" ;
+    }
+    else if(this.value == "คำสั่งนั้นมิชอบด้วยกฎหมาย"){
+      this.parameterService.hasIlligalCommand = "Cri_illigal_command_21"
+    }
+    else if(this.value == "การกระทำนั้นไม่เกินขอบเขต"){
+      this.parameterService.hasLimit = "Cri_limit_27"
+    }
+    else if(this.value == "มีจิตบกพร่อง โรคจิต จิตฟั่นเฟือน"){
+      this.parameterService.hasMentalInfirmly = "Cri_mental_infirmly_46"
+    }
+    else if(this.value == "ไม่สามารถรู้ผิดชอบได้ หรือ ไม่สามารถบังคับตนเองได้"){
+      this.parameterService.hasMind = "Cri_mind_17"
+    }
+    else if(this.value == "ผู้กระทำมีหน้าที่ปฎิบัติตาม"){
+      this.parameterService.hasNeedAction = "Cri_need_action_23"
+    }
+    else if(this.value == "มีการกระทำ และ ได้กระทำอันกฎหมายบัญญัติไว้ว่าเป็นความผิด"){
+      this.parameterService.hasSit = "Cri_situation_16"
+    }
+    else if(this.value == "กระทำเพื่อให้ผู้อื่นหรือตนเองพ้นอันตราย"){
+      this.parameterService.hasProtecetd = "Cri_protecetd_28"
+      this.CallOntologyApi();
+    }
+    else if(this.value == "กระทำมิได้ทำให้ผู้อื่นหรือตนเองพ้นอันตราย"){
+      this.CallOntologyApi()
+    }
+  
+    
+
+    if(this.criminalimpunityState == "0"){
+      this.instancename = "ผู้กระทำความผิดอายุน้อยกว่า 15 ปี ใช่หรือไม่"
       this.dropdownListData = [];
-        this.offenderageService.findOffenderage().subscribe(response => {
+        this.criminalImpunityApiService.getCrihasAgeRes().subscribe(response => {
         this.resultList = response;
         for (let moral of this.resultList) {
           this.dropdownListData.push({id: moral.id, value: moral.name});
         }
       });  
-      this.gatherImpunityFirsttime = true
-    }
-    
-    // Offender age
-      if(this.value == "มากกว่า 15 ปีบริบูรณ์" ){
-      this.instancename = "ผู้กระทำกระทำด้วยความจำเป็นหรือไม่"
-      this.dropdownListData = [];
-      this.yesnoCriminalImpunityService.findAllYesnoNecessity().subscribe(response => {
-      this.resultList = response;
-          for (let criminalImpunity of this.resultList) {
-            this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-          }
-        });
-      }
-      if(this.value == "ระหว่าง 7 ถึง 15 ปี" ){
-        
-      }
-
-      if(this.value == "น้อยกว่า 7 ปี" ){
-        
-      }
-     // End offender age
-     
-      // Necessity
-      if(this.value == "ผู้กระทำกระทำด้วยความจำเป็น" ){
-      this.instancename = "อยู่ภายใต้สถานการณ์บังคับ หรือภายใต้ความจำเป็นหรือไม่"
-      this.dropdownListData = [];
-      this.cannotavoidService.findCannotavoidActor().subscribe(response => {
-      this.resultList = response;
-          for (let criminalImpunity of this.resultList) {
-            this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-          }
-        });
-      }
-      if(this.value == "ผู้กระทำไม่ได้กระทำด้วยความจำเป็น" ){
-        this.instancename = "ผู้กระทำอยู่ในสภาวะจิตผิดปกติ หรือภายใต้ความมึนเมาหรือไม่"
-        this.dropdownListData = [];
-        this.intoxicationService.findIntoxication().subscribe(response => {
-        this.resultList = response;
-            for (let intoxication of this.resultList) {
-              this.dropdownListData.push({id: intoxication.id, value: intoxication.name});
-            }
-          });
-      }
-      // End Necessity
-
-      //Cannot avoid
-      if(this.value == "อยู่ในสถานการณ์ปกติ" ){
-         
-      }
-      if(this.value == "อยู่ภายใต้สถานการณ์บังคับ" ){
-        this.instancename = "ผู้กระทำกระทำด้วยความจำเป็นหรือไม่"
-        this.dropdownListData = [];
-        this.yesnoCriminalImpunityService.findAllYesnoOwn().subscribe(response => {
-        this.resultList = response;
-            for (let criminalImpunity of this.resultList) {
-              this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-            }
-          });
-      }
-      if(this.value == "อยู่ภายใต้ภยันตราย" ){
-        this.instancename = "ผู้กระทำกระทำด้วยความจำเป็นหรือไม่"
-        this.dropdownListData = [];
-        this.yesnoCriminalImpunityService.findAllYesnoImmi().subscribe(response => {
-        this.resultList = response;
-            for (let criminalImpunity of this.resultList) {
-              this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-            }
-          });
-      }
-      // Finish cannot avoid
-
-      // Yes no own and immi
-      if(this.value == "ผลจากการกระทำมิได้มาจากมูลความผิดของผู้กระทำ" ){
-        
-      }
-
-      if(this.value == "ไม่ได้มีภยันอันตรายใกล้จะถึง" ){
-
-      }
-   
-     if(this.value == "ผลจากการกระทำมาจากมูลความผิดของผู้กระทำ" 
-    || this.value == "มีภยันอันตรายใกล้จะถึง"){
-       this.instancename = "ผู้กระทำกระทำอย่างเหมาะสมหรือไม่"
-       this.dropdownListData = [];
-       this.yesnoCriminalImpunityService.findAllYesnoReason().subscribe(response => {
-       this.resultList = response;
-           for (let criminalImpunity of this.resultList) {
-             this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-           }
-         });
-     }
-     // Finish Yes no own
-
-     //Start Intoxication
-     if(this.value == "ผู้กระทำอยู่ภายใต้สภาวะจิตไม่ปกติหรือมึนเมา" ){
-      this.instancename = "ผู้กระทำความผิดมีสภาวะจิตปกติและสามารถควบคุมตนเองได้หรือไม่"
-      this.dropdownListData = [];
-      this.yesnoCriminalImpunityService.findAllYesnoControl().subscribe(response => {
-      this.resultList = response;
-          for (let criminalImpunity of this.resultList) {
-            this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-          }
-        });
-      }
-      if(this.value == "ผู้กระทำอยู่ภายใต้สภาวะจิตปกติและไม่มึนเมา" ){
-        this.instancename = "ผู้กระทำเป็นคู่สามีภรรยาหรือไม่"
-        this.dropdownListData = [];
-        this.yesnoCriminalImpunityService.findAllYesnoSpouse().subscribe(response => {
-        this.resultList = response;
-            for (let criminalImpunity of this.resultList) {
-              this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-            }
-          });
-      }
-     //Finish Itnoxication
-
-     //Start yesno control
-     
-     if(this.value == "ผู้กระทำมีสติสัมปชัญญะและสามารถควบคุมตนเองได้" ){
-     }
-
-     if(this.value == "ผู้กระทำไม่มีสติสัมปชัญญะหรือไม่สามารถควบคุมตนเองได้" ){
-      this.instancename = "สาเหตุของการไม่มีสติสัมปชัญญะหรือไม่สามารถควบคุมตนเองได้คืออะไร"
-      this.dropdownListData = [];
-      this.intoxicationormindService.findIntoxicationormind().subscribe(response => {
-      this.resultList = response;
-          for (let criminalImpunity of this.resultList) {
-            this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-          }
-        });
-     }
-     //finish yesno control
-
-     //start Intoxication or mind
-     if(this.value == "เป็นบุคคลจิตวิกลจริต" ){
+      this.criminalimpunityState = "1"
+      return
     }
 
-    if(this.value == "มึนเมาขาดสติ" ){
-     this.instancename = "การมึนเมานั้นเกิดจากความไม่รู้ ถูกมอมเมาให้ขาดสติจากบุคคลอื่น"
-     this.dropdownListData = [];
-     this.yesnoService.findAllYesno().subscribe(response => {
-     this.resultList = response;
-         for (let criminalImpunity of this.resultList) {
-           this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-         }
-       });
-    }
-     //finish Intoxication or mind
-
-      //start yesno
-      if(this.value == "ใช่" ){
-      }
-  
-      if(this.value == "ไม่" ){
-       
-      }
-       //finish yesno
-
-      //start spouse
-      if(this.value == "ผู้กระทำเป็นคู่สมรสของผู้ถูกกระทำ" ){
-          this.instancename = "เป็นความผิดที่บัญญัติไว้ตามมาตรา 334 ถึง 336 หรือ 341 ถึง 364"
-          this.dropdownListData = [];
-          this.yesnoCriminalImpunityService.findAllYesno334().subscribe(response => {
-          this.resultList = response;
-              for (let criminalImpunity of this.resultList) {
-                this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-              }
-            });
-      }
-  
-      if(this.value == "ผู้กระทำไม่ได้เป็นคู่สมรสของผู้ถูกกระทำ" ){
-        this.instancename = "เป็นคำสั่งจากพนักงานรัฐ และเป็นคำสั่งที่ผิดกฎหมาย"
-        this.dropdownListData = [];
-        this.yesnoCriminalImpunityService.findAllYesnoUnlawful().subscribe(response => {
+    if(this.criminalimpunityState == "1"){
+      this.instancename = "มีการกระทำ และ ได้กระทำอันกฎหมายบัญญัติไว้ว่าเป็นความผิด ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasSitRes().subscribe(response => {
         this.resultList = response;
-            for (let criminalImpunity of this.resultList) {
-              this.dropdownListData.push({id: criminalImpunity.id, value: criminalImpunity.name});
-            }
-          });
-      }
-       
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "2"
+      return
+    }
 
+    if(this.criminalimpunityState == "2"){
+      this.instancename = "ผู้กระทำไม่สามารถรู้ผิดชอบได้ หรือ ไม่สามารถบังคับตนเองได้ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasMindRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "3"
+      return
+    }
+
+    if(this.criminalimpunityState == "3"){
+      this.instancename = "ผู้กระทำมีจิตบกพร่อง โรคจิต จิตฟั่นเฟือนใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasMentalInfirmlyRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "4"
+      return
+    }
+
+    if(this.criminalimpunityState == "4"){
+      this.instancename = "กระทำเพราะความมึนเมา ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasDrunkRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "5"
+      return
+    }
+
+    if(this.criminalimpunityState == "5"){
+      this.instancename = "ผู้เสพย์ไม่รู้ว่าสิ่งนั้นจะทำให้มึนเมา หรือ ผู้เสพย์ถูกขึนใจให้เสพย์ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasCauseDrunkfRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "6"
+      return
+    }
+
+    if(this.criminalimpunityState == "6"){
+      this.instancename = "กระทำความผิดตามคำสั่งเจ้าพนักงานใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasActByOfficerComRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "7"
+      return
+    }
+
+    if(this.criminalimpunityState == "7"){
+      this.instancename = "คำสั่งนั้นมิชอบด้วยกฎหมายหรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasIlligalCommandRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "8"
+      return
+    }
+
+    if(this.criminalimpunityState == "8"){
+      this.instancename = "ผุ้กระทำไม่รู้ว่าคำสั่งนั้นมิชอบด้วยกฎหมาย ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasDontKnowIlligalRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "9"
+      return
+    }
+
+    if(this.criminalimpunityState == "9"){
+      this.instancename = "ผู้กระทำมีหน้าที่ปฎิบัติตาม ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasNeedActionRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "10"
+      return
+    }
+
+    if(this.criminalimpunityState == "10"){
+      this.instancename = "อยู่ในที่บังคับหรือภายใต้อำนาจ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasBeForcesRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "11"
+      return
+    }
+
+    if(this.criminalimpunityState == "11"){
+      this.instancename = "ไม่สามารถหลักเลี่ยงหรือขัดขืนได้ ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasCannotAvoidRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "12"
+      return
+    }
+
+    if(this.criminalimpunityState == "12"){
+      this.instancename = "ผู้กระทำตั้งใจกระทำโดยความต้องการของตน ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasDontNeedRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "13"
+      return
+    }
+
+    if(this.criminalimpunityState == "13"){
+      this.instancename = "การกระทำนั้นเกินขอบเขตหรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasLimitRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });  
+      this.criminalimpunityState = "14"
+      return
+    }
+
+
+    if(this.criminalimpunityState == "14"){
+      this.instancename = "กระทำเพื่อให้ผู้อื่นหรือตนเองพ้นอันตราย ใช่หรือไม่"
+      this.dropdownListData = [];
+        this.criminalImpunityApiService.getCrihasProtecetdRes().subscribe(response => {
+        this.resultList = response;
+        for (let moral of this.resultList) {
+          this.dropdownListData.push({id: moral.id, value: moral.name});
+        }
+      });
+      return
+    }
   }
 }

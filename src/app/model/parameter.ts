@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class ParameterService {
 
+  // EOC
   public _offender:String;
   public _party:String;
   public _innocent:String;
@@ -23,6 +24,7 @@ export class ParameterService {
   public _noIntention:String;
   public _causation:String;
 
+
   // Criminal Impunity
   public _noCriminalImpunity:String;
   public _entrapmentWithOfficer:String;
@@ -32,6 +34,21 @@ export class ParameterService {
   public _mentalInfirmly:String;
   public _child:String;
   public _necessity:String;
+  public _hasAge:String;
+  public _hasSit:String;
+  public _hasMind:String;
+  public _hasMentalInfirmly:String;
+  public _hasDrunk:String;
+  public _hasCauseDrunk:String;
+  public _hasActByOfficerCom:String;
+  public _hasIlligalCommand:String;
+  public _hasDontKnowIlligal:String;
+  public _hasNeedAction:String;
+  public _hasBeForces:String;
+  public _hasCannotAvoid:String;
+  public _hasDontNeed:String;
+  public _hasLimit:String;
+  public _hasProtecetd:String;
 
   // Jusification
   public _assent:String;
@@ -39,6 +56,27 @@ export class ParameterService {
   public _actIsLawfulDefense:String;
   public _dangerToBeImminent:String;
   public _danger:String;
+  public _hasDanger:String;
+  public _hasDangerImn:String;
+  public _hasLawfulDef:String;
+  public _hasDefending:String;
+  public _hasPureAssent:String;
+  public _hasAssentGoodMoral:String;
+  public _hasAssentDuringCrime:String;
+
+   // Intention
+   public _hasforeeffect:String;
+   public _hasintact:String;
+   public _hasreaact:String;
+   public _hasReaCau:String;
+   public _hasIntentOther:String;
+   public _hasActHeedless:String;
+   public _hasActHeedlessEng:String;
+
+
+
+
+
 
   set offender(value:any) {
     this._offender = value
@@ -97,10 +135,11 @@ export class ParameterService {
   set causation(value:any) {
     this._causation = value
   }
+
+
   get offender():any {
     return this._offender;
   }
-
   get party():any {
     return this._party;
   }
@@ -181,6 +220,57 @@ export class ParameterService {
   set necessity(value:any) {
     this._necessity = value
   }  
+  set hasAge(value:any) {
+    this._hasAge= value
+  }
+  set hasSit(value:any) {
+    this._hasSit= value
+  }
+  set hasMind(value:any) {
+    this._hasMind= value
+  }
+  set hasMentalInfirmly(value:any) {
+    this._hasMentalInfirmly= value
+  }
+  set hasDrunk(value:any) {
+    this._hasDrunk= value
+  }
+  set hasCauseDrunk(value:any) {
+    this._hasCauseDrunk= value
+  }
+  set hasActByOfficerCom(value:any) {
+    this._hasActByOfficerCom= value
+  }
+  set hasIlligalCommand(value:any) {
+    this._hasIlligalCommand= value
+  }
+  set hasDontKnowIlligal(value:any) {
+    this._hasDontKnowIlligal= value
+  }
+
+  set hasNeedAction(value:any) {
+    this._hasNeedAction= value
+  }
+
+  set hasBeForces(value:any) {
+    this._hasBeForces= value
+  }
+
+  set hasCannotAvoid(value:any) {
+    this._hasCannotAvoid= value
+  }
+
+  set hasDontNeed(value:any) {
+    this._hasDontNeed= value
+  }
+
+  set hasLimit(value:any) {
+    this._hasLimit= value
+  }
+
+  set hasProtecetd(value:any) {
+    this._hasProtecetd= value
+  }
 
   get noCriminalImpunity():any {
     return this._noCriminalImpunity;
@@ -207,6 +297,65 @@ export class ParameterService {
     return this._necessity;
   }
 
+  get hasAge():any {
+    return this._hasAge;
+  }
+
+  get hasSit():any {
+    return this._hasSit;
+  }
+
+  get hasMind():any {
+    return this._hasMind;
+  }
+
+  get hasMentalInfirmly():any {
+    return this._hasMentalInfirmly;
+  }
+
+  get hasDrunk():any {
+    return this._hasDrunk;
+  }
+  get hasCauseDrunk():any {
+    return this._hasCauseDrunk;
+  }
+
+  get hasActByOfficerCom():any {
+    return this._hasActByOfficerCom;
+  }
+
+  get hasIlligalCommand():any {
+    return this._hasIlligalCommand;
+  }
+
+  get hasDontKnowIlligal():any {
+    return this._hasDontKnowIlligal;
+  }
+
+  get hasNeedAction():any {
+    return this._hasNeedAction;
+  }
+
+  get hasBeForces():any {
+    return this._hasBeForces;
+  }
+
+  get hasCannotAvoid():any {
+    return this._hasCannotAvoid;
+  }
+
+  get hasDontNeed():any {
+    return this._hasDontNeed;
+  }
+
+  get hasLimit():any {
+    return this._hasLimit;
+  }
+
+  get hasProtecetd():any {
+    return this._hasProtecetd;
+  }
+
    // Jusification SET GET
   set assent(value:any) {
     this._assent = value
@@ -222,6 +371,27 @@ export class ParameterService {
   }
   set danger(value:any) {
     this._danger = value
+  }
+  set hasAssentDuringCrime(value:any) {
+    this._hasAssentDuringCrime = value
+  }
+  set hasAssentGoodMoral(value:any) {
+    this._hasAssentGoodMoral = value 
+  }
+  set hasPureAssent(value:any) {
+    this._hasPureAssent = value
+  }
+  set hasDefending(value:any) {
+    this._hasDefending = value
+  }
+  set hasLawfulDef(value:any) {
+    this._hasLawfulDef = value
+  }
+  set hasDangerImn(value:any) {
+    this._hasDangerImn = value
+  }
+  set hasDanger(value:any) {
+    this._hasDanger = value 
   }
 
   get assent():any {
@@ -239,4 +409,72 @@ export class ParameterService {
   get danger():any {
     return this._danger;
   }
+
+  get hasDanger():any {
+    return this._hasDanger;
+  }
+  get hasDangerImn():any {
+    return this._hasDangerImn;
+  } 
+  get hasLawfulDef():any{
+    return this._hasLawfulDef;
+  }
+  get hasDefending():any {
+    return this._hasDefending;
+  }
+  get hasPureAssent():any {
+    return this._hasPureAssent;
+  }
+  get hasAssentGoodMoral():any {
+    return this._hasAssentGoodMoral;
+  }
+  get hasAssentDuringCrime():any {
+    return this._hasAssentDuringCrime;
+  } 
+
+  // Intention get set
+  set hasforeeffect(value:any) {
+    this._hasforeeffect = value
+  }
+  set hasintact(value:any) {
+    this._hasintact = value 
+  }
+  set hasreaact(value:any) {
+    this._hasreaact = value
+  }
+  set hasReaCau(value:any) {
+    this._hasReaCau = value
+  }
+  set hasIntentOther(value:any) {
+    this._hasIntentOther = value
+  }
+  set hasActHeedless(value:any) {
+    this._hasActHeedless = value
+  }
+  set hasActHeedlessEng(value:any) {
+    this._hasActHeedlessEng = value 
+  }
+
+  get hasforeeffect():any {
+    return this._hasforeeffect;
+  }
+  get hasintact():any {
+    return this._hasintact;
+  } 
+  get hasreaact():any{
+    return this._hasreaact;
+  }
+  get hasReaCau():any {
+    return this._hasReaCau;
+  }
+  get hasIntentOther():any {
+    return this._hasIntentOther;
+  }
+  get hasActHeedless():any {
+    return this._hasActHeedless;
+  }
+  get hasActHeedlessEng():any {
+    return this._hasActHeedlessEng;
+  } 
+
 }

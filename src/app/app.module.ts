@@ -25,12 +25,15 @@ import { YesnoAwarenessService } from './service/yesnoawareness.service';
 import { YesnoDirectService } from './service/yesnodirect.service';
 import { YesnoTransferService } from './service/yesnotransfer.service';
 import { YesnoMoralService } from './service/yesnomoral.service';
+import { IntentionApiService } from './service/intentionapi.service';
 import { VicDetailService } from './service/vicdetail.service';
 import { AddDetailService } from './service/addDetail.service';
 import { ParameterService } from './model/parameter';
 import { YesnoDangerService } from './service/yesnodanger.service';
 import { YesnoDefenseService } from './service/yesnodefense.service';
 import { YesnoCriminalImpunityService } from './service/yesnoCriminalImpunity.service';
+import { JustificationApiService } from './service/justificationapi.service';
+import { CriminalImpunityApiService } from './service/criminalimpunityapi.service';
 import { IntoxicationService } from './service/intoxication.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BusyModule} from 'angular2-busy';
@@ -79,7 +82,10 @@ import { NgProgressModule } from 'ng2-progressbar';
     OntologyService,
     YesnoDefenseService,
     VicDetailService,
+    JustificationApiService,
+    CriminalImpunityApiService,
     AddDetailService,
+    IntentionApiService,
     ParameterService],
   bootstrap: [AppComponent]
 })
