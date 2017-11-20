@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { AboutmeComponent } from './aboutme/aboutme.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
-import { HeroListComponent } from './hero-list/hero-list.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { UsertabComponent } from './usertab/usertab.component';
 import { TabContentComponent } from './tabcontent/tabcontent.component';
@@ -38,6 +37,9 @@ import { IntoxicationService } from './service/intoxication.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BusyModule} from 'angular2-busy';
 import { NgProgressModule } from 'ng2-progressbar';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { ConfirmComponent } from './dialog/confirm.component';
+import {TooltipModule} from "ngx-tooltip";
 
 //import { MdTabsModule } from '@angular/material';
 
@@ -47,11 +49,14 @@ import { NgProgressModule } from 'ng2-progressbar';
     AppComponent,
     AboutmeComponent,
     HomeComponent,
-    HeroListComponent,
     DropdownComponent,
     UsertabComponent,
     TabContentComponent,
-    ActivityresultComponent
+    ActivityresultComponent,
+    ConfirmComponent
+  ],
+  entryComponents: [
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +65,9 @@ import { NgProgressModule } from 'ng2-progressbar';
     AppRoutingModule,
     BrowserAnimationsModule,
     BusyModule,
-    NgProgressModule
+    NgProgressModule,
+    BootstrapModalModule,
+    TooltipModule
   ],
   providers: [
     ActorService, 

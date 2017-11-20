@@ -1,18 +1,43 @@
-<div class="col-md-6">  
-<div [ngBusy]="busy"></div>
-      <p class="display-inline">กรุณาเลือก {{instancename}} : </p> 
-      <select  #selectedCategory   class="form-control display-inline" (ngModelChange)="onChange($event)"
-            style="width:40%">
-            <option *ngFor="let dropdownValue of dropdownListData" [value]="dropdownValue.value">{{dropdownValue.value}}</option>
-      </select>
-      <button type="button" class="btn btn-primary display-inline" (click)="myFunc(selectedCategory.value)">Submit</button>
-</div>
-<div class="col-md-6" id="flowchart">
-<p>Flow chart</p>
-<app-activityresult></app-activityresult>
-<div *ngFor="let item of flowchart">
-  {{item}}
-</div>
+
+
+<div class="col-md-10">  
+      <div [ngBusy]="busy">
+            <hr/>
+            <div>
+                  <div> 
+                        <p class="display-inline insert-text">{{instancename}} : </p> 
+                  </div>
+                  <div class="information">
+                        <div style="width:90%; display:inline-block">
+                              <select  #selectedCategory   class="form-control display-inline select-list" (ngModelChange)="onChange($event)">
+                                    <option *ngFor="let dropdownValue of dropdownListData" [value]="dropdownValue.value">{{dropdownValue.value}}</option>
+                              </select>
+                        </div>
+                        <div style="display: inline-block; background-position-y: 2px;">
+                              <i class="info-icon" tooltip="รายละเอียดเพิ่มเติมของตัวเลือก" (click)="showInformation()"></i>
+                              <!-- <button type="button" class="btn btn-success display-inline sub-button"  style="" (click)="showInformation()">ข้อมูลเพิ่มเติมตัวเลือกนี้</button> -->
+                        </div>
+                  </div>
+            </div>
+            <div class="submit-button">
+                  <div class="submit-group">
+                        <div class="button-container">
+                              <button type="button" class="btn btn-primary display-inline sub-button"  [ngClass]="{disabled : isValid}"  (disabled)="isValid" (click)="!isValid && myFunc(selectedCategory.value)">เลือก</button>
+                        </div>
+                        <div class="button-container">
+                              <button type="button" class="btn btn-success display-inline sub-button" [ngClass]="{disabled : !isValid}"  (disabled)="!isValid" (click)="isValid && callOntology()">ยืนยันและประมวลผล</button>
+                        </div>
+                  </div>
+            </div>
+      </div>
+      <hr/>
+      <div class="col-md-12 flow-text" id="flowchart">
+            <p style="padding-top: 15px; text-align:center; color:#d2cfcf;">ข้อมูลนำเข้าจากผู้ใช้งาน</p>
+            <app-activityresult></app-activityresult>
+            <div *ngFor="let item of flowchart">
+            {{item}}
+            </div>
+      </div>
 </div>
 
 

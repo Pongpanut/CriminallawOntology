@@ -2,10 +2,41 @@
 #wrapper  #page-wrapper{
     margin: 0 0;
 }
+
+.page-header{
+    color: grey;
+    font-size: 18px;
+    text-align: center;
+}
+
+.cpe-logo{
+  background-image: url("../image/cpe-logo.png");
+  background-size: 300px 50px;
+  height: 50px;
+  width: 300px;
+  display: block;
+  float: left;
+}
+
+.chula-logo{
+    background-image: url("../image/chu-logo.png");
+    background-size: 300px 50px;
+    height: 50px;
+    width: 300px;
+    display: block;
+    margin-right: 20px;
+    float: right;
+  }
+
 .header{
     background-color: grey;
     color: white;
     text-align: center;
     margin: 0px 0px;
     padding: 10px 0px;
+}
+
+.navbar-header{
+    width: 100%;
+    background-color: white;
 }

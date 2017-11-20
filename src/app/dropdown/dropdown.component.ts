@@ -17,12 +17,12 @@ export class DropdownComponent implements OnInit {
   }
   
   ngOnInit() {
-    this.currencyCodes.push({key: 0, value: "Please select No. of actor"});
-    this.currencyCodes.push({key: 1, value: "1 actor"});
-    this.currencyCodes.push({key: 2, value: "2 actors"});
-    this.currencyCodes.push({key: 3, value: "3 actors"});
-    this.currencyCodes.push({key: 4, value: "4 actors"});
-    this.currencyCodes.push({key: 5, value: "5 actors"});
+    this.currencyCodes.push({key: 0, value: "จำนวนผู้กระทำผิด"});
+    this.currencyCodes.push({key: 1, value: "1 คน"});
+    this.currencyCodes.push({key: 2, value: "2 คน"});
+    this.currencyCodes.push({key: 3, value: "3 คน"});
+    this.currencyCodes.push({key: 4, value: "4 คน"});
+    this.currencyCodes.push({key: 5, value: "5 คน"});
   }
 
   onChange(event) {
